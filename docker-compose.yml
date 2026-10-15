@@ -1,0 +1,20 @@
+services:
+  backend:
+    image: ghcr.io/imperiatechit/kraftista-back:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: /etc/kraftista-back/.env
+    volumes:
+      - /var/lib/kraftista-back/uploads:/app/uploads
+    networks: [traefik-proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-proxy
+      - traefik.http.routers.kraftista-back.rule=(Host(`kraftistashop.com`) || Host(`www.kraftistashop.com`)) && (PathPrefix(`/api`) || PathPrefix(`/uploads`) || Path(`/health`))
+      - traefik.http.routers.kraftista-back.entrypoints=websecure
+      - traefik.http.routers.kraftista-back.tls.certresolver=letsencrypt
+      - traefik.http.routers.kraftista-back.priority=10
+      - traefik.http.services.kraftista-back.loadbalancer.server.port=8000
+
+networks:
+  traefik-proxy:
+    external: true
