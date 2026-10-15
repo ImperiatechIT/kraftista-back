@@ -44,7 +44,7 @@ jobs:
       - uses: hostinger/deploy-on-vps@v2
         with:
           api-key: ${{ secrets.HOSTINGER_API_KEY }}
-          virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
+          virtual-machine: ${{ secrets.HOSTINGER_VM_ID }}
           project-name: kraftista-back
           environment-variables: |
             IMAGE_TAG=${{ inputs.image_tag || github.sha }}
